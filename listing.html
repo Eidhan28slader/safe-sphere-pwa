@@ -1,55 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>SafeSphere - Listings</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <title>SafeSphere - Listings</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
 <nav>
-  <img src="assets/logo.png" class="logo" alt="SafeSphere logo">
-  <a href="index.html">Home</a>
-  <a href="listing.html" class="active">Listing</a>
-  <a href="post.html">Post</a>
-  <a href="admin.html">Admin</a>
+    <a href="index.html">Home</a>
+    <a href="listing.html" class="active">Listing</a>
+    <a href="post.html">Post</a>
+    <a href="admin.html">Admin</a>
 </nav>
 
 <section class="section-box">
-  <h2>Available Listings</h2>
-  <div id="posts">Loading...</div>
+    <h2>Available Listings</h2>
+    <p>Approved posts appear here automatically.</p>
+</section>
+
+<section class="section-box">
+    <div id="posts">Loading...</div>
 </section>
 
 <script type="module">
-import { 
-  db, collection, query, orderBy, onSnapshot
-} from "./firebase.js";
+import { db, collection, onSnapshot, query, orderBy } from "./firebase.js";
 
-/* 📌 Contenedor */
-const box = document.getElementById("posts");
+const postsBox = document.getElementById("posts");
 
-/* 📌 Mostrar solo aprobados */
+// Listen for approved posts
 onSnapshot(
-  query(collection(db, "posts"), orderBy("createdAt", "desc")),
-  snap => {
-    box.innerHTML = "";
+    query(collection(db, "posts"), orderBy("createdAt", "desc")),
+    snapshot => {
 
-    snap.forEach(doc => {
-      const p = doc.data();
-      if (p.status !== "approved") return;  // SOLO APROBADOS
+        postsBox.innerHTML = "";
 
-      box.innerHTML += `
-        <div class="card">
-          <h3>${p.title}</h3>
-          <p>${p.desc}</p>
-          <p><b>Price:</b> $${p.price}</p>
-        </div>
-      `;
-    });
-  }
+        let hasData = false;
+
+        snapshot.forEach(doc => {
+            const p = doc.data();
+
+            // Show ONLY approved posts
+            if (p.status !== "approved") return;
+
+            hasData = true;
+
+            postsBox.innerHTML += `
+                <div class="card">
+                    <div class="card-body">
+                        <h3>${p.title}</h3>
+                        <p>${p.desc}</p>
+                        <p><strong>Price:</strong> $${p.price}</p>
+                        <span class="badge verified">Approved</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        if (!hasData) {
+            postsBox.innerHTML = "<p>No approved posts yet.</p>";
+        }
+    }
 );
 </script>
 
 </body>
 </html>
+
