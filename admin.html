@@ -5,22 +5,18 @@
     <title>SafeSphere - Admin</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
 <nav>
-    <img src="assets/logo.png" class="logo" alt="SafeSphere logo">
     <a href="index.html">Home</a>
     <a href="listing.html">Listing</a>
     <a href="post.html">Post</a>
-    <a href="admin.html" class="active">Admin</a>
+    <a href="admin.html">Admin</a>
 </nav>
-
-<main>
 
 <section class="section-box">
     <h2>Admin Panel</h2>
-    <p>Manage all user posts: approve, reject or delete listings.</p>
+    <p>Approve, reject or delete listings</p>
 </section>
 
 <section class="section-box">
@@ -28,103 +24,47 @@
     <div id="adminPosts">Loading...</div>
 </section>
 
-</main>
-
-<!-- ====================== -->
-<!--   FIREBASE + LÓGICA    -->
-<!-- ====================== -->
-
 <script type="module">
-
-/* IMPORTAR FIREBASE */
-import { 
-  auth, onAuthStateChanged,
-  db, collection, doc, updateDoc, deleteDoc,
-  onSnapshot, query, orderBy
-} from "./firebase.js";
-
-
-/* ======================== */
-/* 🔐 PROTEGER LA PÁGINA    */
-/* ======================== */
-onAuthStateChanged(auth, user => {
-  if (!user) {
-    window.location.href = "login.html";   // No logueado → fuera
-  }
-});
-
-
-/* ======================== */
-/*  📌 CARGAR POSTS ADMIN   */
-/* ======================== */
+import { db, collection, onSnapshot, query, orderBy, updateDoc, deleteDoc, doc } from "./firebase.js";
 
 const box = document.getElementById("adminPosts");
 
-onSnapshot(
-  query(collection(db, "posts"), orderBy("createdAt", "desc")),
-  (snapshot) => {
-
-    box.innerHTML = ""; // limpiar
+onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), snapshot => {
+    box.innerHTML = "";
 
     snapshot.forEach(d => {
-      const p = d.data();
-      const id = d.id;
+        const p = d.data();
+        const id = d.id;
 
-      box.innerHTML += `
-        <div class="admin-card">
-          <h3>${p.title}</h3>
-          <p>${p.desc}</p>
-          <p><b>Precio:</b> $${p.price}</p>
+        box.innerHTML += `
+        <div class="admin-item">
+            <h3>${p.title}</h3>
+            <p>${p.desc}</p>
+            <p><b>Price:</b> $${p.price}</p>
+            <p><b>Status:</b> ${p.status}</p>
 
-          <p><b>Estado:</b>
-            <span style="color:${p.status === "approved" ? "lightgreen" : 
-                                  p.status === "rejected" ? "red" : "yellow"}">
-              ${p.status ?? "pending"}
-            </span>
-          </p>
-
-          <button onclick="approve('${id}')">Aprobar</button>
-          <button onclick="reject('${id}')">Rechazar</button>
-          <button onclick="removePost('${id}')">Eliminar</button>
-        </div>
-      `;
+            <button onclick="approve('${id}')">Approve</button>
+            <button onclick="reject('${id}')">Reject</button>
+            <button onclick="remove('${id}')">Delete</button>
+        </div>`;
     });
-  }
-);
+});
 
-
-/* ======================== */
-/*  🟢 APROBAR POST          */
-/* ======================== */
-
+// MAKE FUNCTIONS GLOBAL
 window.approve = async (id) => {
-  await updateDoc(doc(db, "posts", id), { status: "approved" });
-  alert("Post aprobado ✔️");
+    await updateDoc(doc(db, "posts", id), { status: "approved" });
 };
-
-
-/* ======================== */
-/*  🔴 RECHAZAR POST        */
-/* ======================== */
 
 window.reject = async (id) => {
-  await updateDoc(doc(db, "posts", id), { status: "rejected" });
-  alert("Post rechazado ❌");
+    await updateDoc(doc(db, "posts", id), { status: "rejected" });
 };
 
-
-/* ======================== */
-/*  ❌ ELIMINAR POST        */
-/* ======================== */
-
-window.removePost = async (id) => {
-  if (confirm("¿Seguro que deseas eliminar este post?")) {
-    await deleteDoc(doc(db, "posts", id));
-    alert("Post eliminado 🗑️");
-  }
+window.remove = async (id) => {
+    if (confirm("Delete post?"))
+        await deleteDoc(doc(db, "posts", id));
 };
-
 </script>
 
 </body>
 </html>
+
