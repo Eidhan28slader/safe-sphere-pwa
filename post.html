@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <title>SafeSphere - Post</title>
     <link rel="stylesheet" href="styles.css">
+    <script type="module" src="firebase.js"></script>
 </head>
-
 <body>
 
 <nav>
-    <img src="assets/logo.png" class="logo" alt="SafeSphere logo">
+    <img src="assets/logo.png" class="logo">
     <a href="index.html">Home</a>
     <a href="listing.html">Listing</a>
-    <a href="post.html" class="active">Post</a>
+    <a href="post.html">Post</a>
     <a href="admin.html">Admin</a>
 </nav>
 
@@ -23,44 +23,39 @@
     <textarea id="desc" placeholder="Description"></textarea>
     <input id="price" type="number" placeholder="Price">
 
-    <button id="submit">Publish</button>
+    <button id="publishBtn">Publish</button>
 </section>
 
 <script type="module">
-import { 
-  auth, onAuthStateChanged,
-  db, collection, addDoc, serverTimestamp
-} from "./firebase.js";
+import { db, collection, addDoc, serverTimestamp, auth } from "./firebase.js";
 
-/* 🔐 PROTEGER ESTA PÁGINA */
-onAuthStateChanged(auth, user => {
-  if (!user) window.location.href = "login.html";
-});
+// BOTÓN
+document.getElementById("publishBtn").addEventListener("click", createPost);
 
-/* 📌 CREAR PUBLICACIÓN */
-document.getElementById("submit").onclick = async () => {
+async function createPost() {
 
-  const title = document.getElementById("title").value;
-  const desc = document.getElementById("desc").value;
-  const price = document.getElementById("price").value;
+    const title = document.getElementById("title").value.trim();
+    const desc = document.getElementById("desc").value.trim();
+    const price = document.getElementById("price").value.trim();
 
-  if (!title || !desc || !price) {
-    alert("Please fill all fields.");
-    return;
-  }
+    if (!title || !desc || !price) {
+        alert("Fill all fields!");
+        return;
+    }
 
-  await addDoc(collection(db, "posts"), {
-    title,
-    desc,
-    price,
-    status: "pending",
-    createdAt: serverTimestamp()
-  });
+    await addDoc(collection(db, "posts"), {
+        title,
+        desc,
+        price,
+        status: "pending",
+        createdAt: serverTimestamp()
+    });
 
-  alert("Listing submitted! Waiting for admin approval.");
-  window.location.href = "listing.html";
-};
+    alert("Listing sent! Wait for admin approval.");
+    window.location.href = "listing.html";
+}
 </script>
 
 </body>
 </html>
+
