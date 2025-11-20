@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SafeSphere - Home</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b1830">
+</head>
+<body>
+  
+<nav>
+  <img src="assets/logo.png" class="logo" alt="SafeSphere logo">
+  <a href="index.html">Home</a>
+  <a href="listing.html">Listing</a>
+  <a href="post.html">Post</a>
+  <a href="admin.html">Admin</a>
+  <a href="roommate.html">Roommates</a>
+  <a href="feedback.html">Feedback</a>
+</nav>
+
+  <main>
+  
+<header class="banner">
+  Find verified, safe student housing in Niagara.
+</header>
+
+<section class="filters">
+  <label>Budget:<input type="number"></label>
+  <label>SphereScore:<input type="number"></label>
+  <label>Distance:<input type="number"></label>
+  <label><input type="checkbox"> Verified only</label>
+</section>
+
+<section class="card">
+  <img src="assets/house1.jpg" class="card-img" alt="House photo">
+  <div class="card-body">
+    <h3>$1200 / month</h3>
+    <span class="badge sphere-score">SphereScore 8.6</span>
+    <span class="badge verified">Verified</span>
+    <p>Noise: Moderate · 12 min walk · 5 min bike</p>
+  </div>
+</section>
+
+  </main>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js');
+      });
+    }
+  </script>
+</body>
+</html>
