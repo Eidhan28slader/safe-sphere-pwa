@@ -1,48 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>SafeSphere - Post</title>
-  <link rel="stylesheet" href="styles.css">
-
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0b1830">
+    <meta charset="UTF-8">
+    <title>SafeSphere - Post</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
 <nav>
-  <img src="assets/logo.png" class="logo" alt="logo">
-  <a href="index.html">Home</a>
-  <a href="listing.html">Listing</a>
-  <a href="post.html">Post</a>
-  <a href="admin.html">Admin</a>
+    <a href="index.html">Home</a>
+    <a href="listing.html">Listing</a>
+    <a href="post.html">Post</a>
+    <a href="admin.html">Admin</a>
 </nav>
 
 <section class="section-box">
-  <h2>Create New Listing</h2>
+    <h2>Create New Listing</h2>
 
-  <input id="title" placeholder="Title">
+    <input id="title" placeholder="Title">
+    <textarea id="desc" placeholder="Description"></textarea>
+    <input id="price" type="number" placeholder="Price">
 
-  <textarea id="desc" placeholder="Description"></textarea>
-
-  <input id="price" type="number" placeholder="Price">
-
-  <button id="publishBtn">Publish</button>
+    <button id="publishBtn">Publish</button>
 </section>
 
-<!-- SCRIPT -->
 <script type="module">
 import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
 
-document.getElementById("publishBtn").addEventListener("click", createPost);
-
-async function createPost() {
+document.getElementById("publishBtn").addEventListener("click", async () => {
     const title = document.getElementById("title").value.trim();
     const desc = document.getElementById("desc").value.trim();
     const price = document.getElementById("price").value.trim();
 
     if (!title || !desc || !price) {
-        alert("Please fill all fields");
+        alert("Fill all fields!");
         return;
     }
 
@@ -56,8 +47,9 @@ async function createPost() {
 
     alert("Listing sent! Wait for admin approval.");
     window.location.href = "listing.html";
-}
+});
 </script>
 
 </body>
 </html>
+
