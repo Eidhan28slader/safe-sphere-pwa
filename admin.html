@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SafeSphere - Admin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+    <img src="assets/logo.png" class="logo" alt="SafeSphere logo">
+    <a href="index.html">Home</a>
+    <a href="listing.html">Listing</a>
+    <a href="post.html">Post</a>
+    <a href="admin.html" class="active">Admin</a>
+</nav>
+
+<main>
+
+<section class="section-box">
+    <h2>Admin Panel</h2>
+    <p>Manage all user posts: approve, reject or delete listings.</p>
+</section>
+
+<section class="section-box">
+    <h2>Publicaciones recibidas</h2>
+    <div id="adminPosts">Loading...</div>
+</section>
+
+</main>
+
+<!-- ====================== -->
+<!--   FIREBASE + LÓGICA    -->
+<!-- ====================== -->
+
+<script type="module">
+
+/* IMPORTAR FIREBASE */
+import { 
+  auth, onAuthStateChanged,
+  db, collection, doc, updateDoc, deleteDoc,
+  onSnapshot, query, orderBy
+} from "./firebase.js";
+
+
+/* ======================== */
+/* 🔐 PROTEGER LA PÁGINA    */
+/* ======================== */
+onAuthStateChanged(auth, user => {
+  if (!user) {
+    window.location.href = "login.html";   // No logueado → fuera
+  }
+});
+
+
+/* ======================== */
+/*  📌 CARGAR POSTS ADMIN   */
+/* ======================== */
+
+const box = document.getElementById("adminPosts");
+
+onSnapshot(
+  query(collection(db, "posts"), orderBy("createdAt", "desc")),
+  (snapshot) => {
+
+    box.innerHTML = ""; // limpiar
+
+    snapshot.forEach(d => {
+      const p = d.data();
+      const id = d.id;
+
+      box.innerHTML += `
+        <div class="admin-card">
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+          <p><b>Precio:</b> $${p.price}</p>
+
+          <p><b>Estado:</b>
+            <span style="color:${p.status === "approved" ? "lightgreen" : 
+                                  p.status === "rejected" ? "red" : "yellow"}">
+              ${p.status ?? "pending"}
+            </span>
+          </p>
+
+          <button onclick="approve('${id}')">Aprobar</button>
+          <button onclick="reject('${id}')">Rechazar</button>
+          <button onclick="removePost('${id}')">Eliminar</button>
+        </div>
+      `;
+    });
+  }
+);
+
+
+/* ======================== */
+/*  🟢 APROBAR POST          */
+/* ======================== */
+
+window.approve = async (id) => {
+  await updateDoc(doc(db, "posts", id), { status: "approved" });
+  alert("Post aprobado ✔️");
+};
+
+
+/* ======================== */
+/*  🔴 RECHAZAR POST        */
+/* ======================== */
+
+window.reject = async (id) => {
+  await updateDoc(doc(db, "posts", id), { status: "rejected" });
+  alert("Post rechazado ❌");
+};
+
+
+/* ======================== */
+/*  ❌ ELIMINAR POST        */
+/* ======================== */
+
+window.removePost = async (id) => {
+  if (confirm("¿Seguro que deseas eliminar este post?")) {
+    await deleteDoc(doc(db, "posts", id));
+    alert("Post eliminado 🗑️");
+  }
+};
+
+</script>
+
+</body>
+</html>

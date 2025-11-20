@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SafeSphere - Login</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .auth-box {
+      background:#111;
+      width:90%;
+      max-width:380px;
+      margin:70px auto;
+      padding:25px;
+      border-radius:16px;
+      text-align:center;
+      box-shadow:0 10px 25px rgba(0,0,0,.5);
+    }
+    .auth-box h2 {
+      margin-bottom:20px;
+      font-weight:600;
+    }
+    .auth-link {
+      color:#3e6ef2;
+      cursor:pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="auth-box">
+  <h2>Welcome Back</h2>
+
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button id="loginBtn">Login</button>
+
+  <p>No account yet? 
+     <a href="register.html" class="auth-link">Create one</a>
+  </p>
+</div>
+
+<script type="module">
+import { auth, signInWithEmailAndPassword } from "./firebase.js";
+
+document.getElementById("loginBtn").onclick = function() {
+  const email = document.getElementById("email").value;
+  const pass = document.getElementById("password").value;
+
+  signInWithEmailAndPassword(auth, email, pass)
+    .then(() => {
+      alert("Logged in!");
+      window.location.href = "index.html";
+    })
+    .catch(err => alert(err.message));
+}
+</script>
+
+</body>
+</html>

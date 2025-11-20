@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SafeSphere - Listings</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+  <img src="assets/logo.png" class="logo" alt="SafeSphere logo">
+  <a href="index.html">Home</a>
+  <a href="listing.html" class="active">Listing</a>
+  <a href="post.html">Post</a>
+  <a href="admin.html">Admin</a>
+</nav>
+
+<section class="section-box">
+  <h2>Available Listings</h2>
+  <div id="posts">Loading...</div>
+</section>
+
+<script type="module">
+import { 
+  db, collection, query, orderBy, onSnapshot
+} from "./firebase.js";
+
+/* 📌 Contenedor */
+const box = document.getElementById("posts");
+
+/* 📌 Mostrar solo aprobados */
+onSnapshot(
+  query(collection(db, "posts"), orderBy("createdAt", "desc")),
+  snap => {
+    box.innerHTML = "";
+
+    snap.forEach(doc => {
+      const p = doc.data();
+      if (p.status !== "approved") return;  // SOLO APROBADOS
+
+      box.innerHTML += `
+        <div class="card">
+          <h3>${p.title}</h3>
+          <p>${p.desc}</p>
+          <p><b>Price:</b> $${p.price}</p>
+        </div>
+      `;
+    });
+  }
+);
+</script>
+
+</body>
+</html>

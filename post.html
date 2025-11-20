@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SafeSphere - Post</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+    <img src="assets/logo.png" class="logo" alt="SafeSphere logo">
+    <a href="index.html">Home</a>
+    <a href="listing.html">Listing</a>
+    <a href="post.html" class="active">Post</a>
+    <a href="admin.html">Admin</a>
+</nav>
+
+<section class="section-box">
+    <h2>Create New Listing</h2>
+
+    <input id="title" placeholder="Title">
+    <textarea id="desc" placeholder="Description"></textarea>
+    <input id="price" type="number" placeholder="Price">
+
+    <button id="submit">Publish</button>
+</section>
+
+<script type="module">
+import { 
+  auth, onAuthStateChanged,
+  db, collection, addDoc, serverTimestamp
+} from "./firebase.js";
+
+/* 🔐 PROTEGER ESTA PÁGINA */
+onAuthStateChanged(auth, user => {
+  if (!user) window.location.href = "login.html";
+});
+
+/* 📌 CREAR PUBLICACIÓN */
+document.getElementById("submit").onclick = async () => {
+
+  const title = document.getElementById("title").value;
+  const desc = document.getElementById("desc").value;
+  const price = document.getElementById("price").value;
+
+  if (!title || !desc || !price) {
+    alert("Please fill all fields.");
+    return;
+  }
+
+  await addDoc(collection(db, "posts"), {
+    title,
+    desc,
+    price,
+    status: "pending",
+    createdAt: serverTimestamp()
+  });
+
+  alert("Listing submitted! Waiting for admin approval.");
+  window.location.href = "listing.html";
+};
+</script>
+
+</body>
+</html>

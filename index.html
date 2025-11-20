@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SafeSphere - Home</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav>
+  <img src="assets/logo.png" class="logo">
+  <a href="index.html">Home</a>
+  <a href="listing.html">Listing</a>
+  <a href="post.html">Post</a>
+  <a href="admin.html">Admin</a>
+</nav>
+
+<header class="banner">
+  Find verified, safe student housing in Niagara.
+</header>
+
+<section id="listings-container">
+  <p>Loading...</p>
+</section>
+
+<script type="module">
+import { db, onSnapshot, collection, query, orderBy } from "./firebase.js";
+
+const box = document.getElementById("listings-container");
+
+onSnapshot(query(collection(db, "posts"), orderBy("createdAt", "desc")), snap => {
+  box.innerHTML = "";
+  snap.forEach(doc => {
+    const p = doc.data();
+    if (p.status !== "approved") return;
+
+    box.innerHTML += `
+      <div class="card">
+        <h3>${p.title}</h3>
+        <p>${p.desc}</p>
+        <p><b>$${p.price}</b></p>
+      </div>
+    `;
+  });
+});
+</script>
+
+</body>
+</html>
