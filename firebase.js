@@ -1,8 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.x.x/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "TU_API_KEY_REAL",
+  apiKey: "TU_API_KEY",
   authDomain: "safe-sphere-29f3f.firebaseapp.com",
   projectId: "safe-sphere-29f3f",
   storageBucket: "safe-sphere-29f3f.appspot.com",
@@ -14,5 +14,3 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export { db, collection, addDoc, serverTimestamp };
-
-
