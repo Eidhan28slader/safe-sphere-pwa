@@ -1,48 +1,44 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
 
-// TU CONFIG DE FIREBASE
-const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "safe-sphere.firebaseapp.com",
-  projectId: "safe-sphere",
-  storageBucket: "safe-sphere.appspot.com",
-  messagingSenderId: "xxxx",
-  appId: "xxxx"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-
-// BOTÓN PUBLICAR
+// DOM Elements
+const titleInput = document.getElementById("title");
+const descriptionInput = document.getElementById("description");
+const priceInput = document.getElementById("price");
 const publishBtn = document.getElementById("publishBtn");
 
+// Collection reference
+const postsRef = collection(db, "posts");
+
+// Publish button action
 publishBtn.addEventListener("click", async () => {
-  const title = document.getElementById("title").value;
-  const description = document.getElementById("description").value;
-  const price = document.getElementById("price").value;
+    const title = titleInput.value.trim();
+    const description = descriptionInput.value.trim();
+    const price = priceInput.value.trim();
 
-  const user = auth.currentUser;
-  if (!user) {
-    alert("Debes iniciar sesión");
-    return;
-  }
+    if (!title || !description) {
+        alert("Title and description are required.");
+        return;
+    }
 
-  try {
-    await addDoc(collection(db, "posts"), {
-      title,
-      description,
-      price,
-      uid: user.uid,
-      createdAt: Date.now()
-    });
+    try {
+        await addDoc(postsRef, {
+            title,
+            description,
+            price: price || null,
+            createdAt: serverTimestamp()
+        });
 
-    alert("Post creado correctamente 🎉");
-  } catch (error) {
-    console.error("Error al guardar:", error);
-    alert("No se pudo publicar");
-  }
+        alert("Post successfully published!");
+
+        // Clear fields
+        titleInput.value = "";
+        descriptionInput.value = "";
+        priceInput.value = "";
+
+    } catch (error) {
+        console.error("Error adding document: ", error);
+        alert("Error publishing post. Check the console.");
+    }
 });
+
 
