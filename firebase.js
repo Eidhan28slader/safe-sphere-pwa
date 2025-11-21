@@ -13,18 +13,23 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
+    apiKey: "AIzaSyDAEvBI8IKWzqc-yS-aTmAgRlGaUomfzY0",
     authDomain: "safe-sphere-29f3f.firebaseapp.com",
     projectId: "safe-sphere-29f3f",
     storageBucket: "safe-sphere-29f3f.appspot.com",
-    messagingSenderId: "2520192856440",
-    appId: "1:2520192856440:web:b6035ce3941955928d348d"
+    messagingSenderId: "250192856440",
+    appId: "1:250192856440:web:b6035ce3941955928d348d"
 };
 
 const app = initializeApp(firebaseConfig);
+
+// AUTH
 const auth = getAuth(app);
+
+// DB
 const db = getFirestore(app);
 
+// EXPORTS
 export { 
     auth,
     db,
@@ -35,3 +40,5 @@ export {
     signInWithEmailAndPassword,
     onAuthStateChanged
 };
+
+
