@@ -14,11 +14,14 @@ publishBtn.addEventListener("click", async () => {
 
     const user = auth.currentUser;
 
-   if (!user) {
+  if (!user) {
     alert("Debes iniciar sesión para publicar.");
-    window.location.href = "login.html";   // 👈 Redirige al login
+    setTimeout(() => {
+        window.location.href = "login.html";
+    }, 100);
     return;
 }
+
 
 
 
