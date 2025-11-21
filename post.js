@@ -2,7 +2,7 @@ import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 // Firebase Auth
-const auth = getAuth();
+const auth = window.auth;
 
 // DOM Elements
 const titleInput = document.getElementById("title");
