@@ -1,6 +1,5 @@
 import { db, auth, collection, addDoc, serverTimestamp } from "./firebase.js";
 
-// DOM Elements
 const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const priceInput = document.getElementById("price");
@@ -9,6 +8,9 @@ const publishBtn = document.getElementById("publishBtn");
 const postsRef = collection(db, "posts");
 
 publishBtn.addEventListener("click", async () => {
+
+    console.log("AUTH:", auth); // 🔥 Debug
+    console.log("CURRENT USER:", auth.currentUser); // 🔥 Debug
 
     const user = auth.currentUser;
 
@@ -19,34 +21,33 @@ publishBtn.addEventListener("click", async () => {
     }
 
     const title = titleInput.value.trim();
-    const description = descriptionInput.value.trim();
+    const desc = descriptionInput.value.trim();
     const price = priceInput.value.trim();
 
-    if (!title || !description) {
-        alert("Title and description are required.");
+    if (!title || !desc) {
+        alert("Título y descripción obligatorios.");
         return;
     }
 
     try {
         await addDoc(postsRef, {
             title,
-            desc: description,    // 🔥 IMPORTANT: debes usar "desc" porque TODAS tus demás páginas leen "desc"
-            price: price || null,
-            status: "pending",    // 🔥 Admin necesita esto
-            createdAt: serverTimestamp(),
-            userId: user.uid
+            desc,
+            price,
+            status: "pending",
+            userId: user.uid,
+            createdAt: serverTimestamp()
         });
 
-        alert("Post successfully published!");
-
+        alert("Publicación creada!");
+        
         titleInput.value = "";
         descriptionInput.value = "";
         priceInput.value = "";
 
-    } catch (error) {
-        console.error("Error adding document: ", error);
-        alert("Error publishing post. Check console.");
+    } catch (e) {
+        console.error("ERROR AÑADIENDO:", e);
+        alert("Error creando la publicación.");
     }
 });
-
 
