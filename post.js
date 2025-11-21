@@ -1,8 +1,4 @@
-import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-// Firebase Auth
-const auth = window.auth;
+import { db, auth, collection, addDoc, serverTimestamp } from "./firebase.js";
 
 // DOM Elements
 const titleInput = document.getElementById("title");
@@ -10,18 +6,15 @@ const descriptionInput = document.getElementById("description");
 const priceInput = document.getElementById("price");
 const publishBtn = document.getElementById("publishBtn");
 
-// Collection reference
 const postsRef = collection(db, "posts");
 
-// Publish button action
 publishBtn.addEventListener("click", async () => {
 
     const user = auth.currentUser;
 
-    // 🔐 Si no está logueado → redirigir al login
     if (!user) {
         alert("Debes iniciar sesión para publicar.");
-        window.location.href = "login.html"; 
+        window.location.href = "login.html";
         return;
     }
 
@@ -37,8 +30,9 @@ publishBtn.addEventListener("click", async () => {
     try {
         await addDoc(postsRef, {
             title,
-            description,
+            desc: description,    // 🔥 IMPORTANT: debes usar "desc" porque TODAS tus demás páginas leen "desc"
             price: price || null,
+            status: "pending",    // 🔥 Admin necesita esto
             createdAt: serverTimestamp(),
             userId: user.uid
         });
@@ -51,7 +45,7 @@ publishBtn.addEventListener("click", async () => {
 
     } catch (error) {
         console.error("Error adding document: ", error);
-        alert("Error publishing post. Check the console.");
+        alert("Error publishing post. Check console.");
     }
 });
 
