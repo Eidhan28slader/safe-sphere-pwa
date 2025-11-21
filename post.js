@@ -1,4 +1,8 @@
 import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// Firebase Auth
+const auth = getAuth();
 
 // DOM Elements
 const titleInput = document.getElementById("title");
@@ -11,6 +15,15 @@ const postsRef = collection(db, "posts");
 
 // Publish button action
 publishBtn.addEventListener("click", async () => {
+
+    const user = auth.currentUser;
+
+    // ❌ Si no está logueado → no puede publicar
+    if (!user) {
+        alert("Debes iniciar sesión para publicar.");
+        return;
+    }
+
     const title = titleInput.value.trim();
     const description = descriptionInput.value.trim();
     const price = priceInput.value.trim();
@@ -25,7 +38,8 @@ publishBtn.addEventListener("click", async () => {
             title,
             description,
             price: price || null,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            userId: user.uid     // 👈 NECESARIO PARA LAS REGLAS
         });
 
         alert("Post successfully published!");
