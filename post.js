@@ -1,8 +1,4 @@
-import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-// Firebase Auth
-const auth = getAuth();
+import { db, auth, collection, addDoc, serverTimestamp } from "./firebase.js";
 
 // DOM Elements
 const titleInput = document.getElementById("title");
@@ -18,7 +14,6 @@ publishBtn.addEventListener("click", async () => {
 
     const user = auth.currentUser;
 
-    // ❌ Si no está logueado → no puede publicar
     if (!user) {
         alert("Debes iniciar sesión para publicar.");
         return;
@@ -39,12 +34,11 @@ publishBtn.addEventListener("click", async () => {
             description,
             price: price || null,
             createdAt: serverTimestamp(),
-            userId: user.uid     // 👈 NECESARIO PARA LAS REGLAS
+            userId: user.uid   // 👈 NECESARIO PARA RULES
         });
 
         alert("Post successfully published!");
 
-        // Clear fields
         titleInput.value = "";
         descriptionInput.value = "";
         priceInput.value = "";
@@ -54,5 +48,6 @@ publishBtn.addEventListener("click", async () => {
         alert("Error publishing post. Check the console.");
     }
 });
+
 
 
