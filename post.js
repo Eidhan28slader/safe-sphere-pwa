@@ -1,5 +1,14 @@
-import { db, auth, collection, addDoc, serverTimestamp } from "./firebase.js";
+// ⬇️ PRIMERO: importar Firebase desde TU firebase.js
+import { 
+    auth, 
+    db, 
+    collection, 
+    addDoc, 
+    serverTimestamp,
+    onAuthStateChanged 
+} from "./firebase.js";
 
+// ⬇️ DOM elements
 const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const priceInput = document.getElementById("price");
@@ -7,14 +16,18 @@ const publishBtn = document.getElementById("publishBtn");
 
 const postsRef = collection(db, "posts");
 
+// 🔥 Detecta si el usuario está logeado (MUY IMPORTANTE)
+let currentUser = null;
+
+onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    console.log("AUTH STATE:", user);
+});
+
+// ⬇️ PUBLICAR
 publishBtn.addEventListener("click", async () => {
 
-    console.log("AUTH:", auth); // 🔥 Debug
-    console.log("CURRENT USER:", auth.currentUser); // 🔥 Debug
-
-    const user = auth.currentUser;
-
-    if (!user) {
+    if (!currentUser) {
         alert("Debes iniciar sesión para publicar.");
         window.location.href = "login.html";
         return;
@@ -25,7 +38,7 @@ publishBtn.addEventListener("click", async () => {
     const price = priceInput.value.trim();
 
     if (!title || !desc) {
-        alert("Título y descripción obligatorios.");
+        alert("Title and description required.");
         return;
     }
 
@@ -35,19 +48,18 @@ publishBtn.addEventListener("click", async () => {
             desc,
             price,
             status: "pending",
-            userId: user.uid,
-            createdAt: serverTimestamp()
+            createdAt: serverTimestamp(),
+            userId: currentUser.uid
         });
 
-        alert("Publicación creada!");
-        
+        alert("Post successfully published!");
+
         titleInput.value = "";
         descriptionInput.value = "";
         priceInput.value = "";
 
     } catch (e) {
-        console.error("ERROR AÑADIENDO:", e);
-        alert("Error creando la publicación.");
+        console.error("Error:", e);
+        alert("Error publishing post. Check console.");
     }
 });
-
