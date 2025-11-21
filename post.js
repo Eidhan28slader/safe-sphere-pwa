@@ -14,10 +14,13 @@ publishBtn.addEventListener("click", async () => {
 
     const user = auth.currentUser;
 
-    if (!user) {
-        alert("Debes iniciar sesión para publicar.");
-        return;
-    }
+   if (!user) {
+    alert("Debes iniciar sesión para publicar.");
+    window.location.href = "login.html";   // 👈 Redirige al login
+    return;
+}
+
+
 
     const title = titleInput.value.trim();
     const description = descriptionInput.value.trim();
