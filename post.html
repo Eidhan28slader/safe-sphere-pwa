@@ -1,54 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>SafeSphere - Post</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crear Publicación - SafeSphere</title>
 
-<nav>
-    <a href="index.html">Home</a>
-    <a href="listing.html">Listing</a>
-    <a href="post.html">Post</a>
-    <a href="admin.html">Admin</a>
-</nav>
-
-<section class="section-box">
-    <h2>Create New Listing</h2>
-
-    <input id="title" placeholder="Title">
-    <textarea id="desc" placeholder="Description"></textarea>
-    <input id="price" type="number" placeholder="Price">
-
-    <button id="publishBtn">Publish</button>
-</section>
-
-<script type="module">
-import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
-
-document.getElementById("publishBtn").addEventListener("click", async () => {
-    const title = document.getElementById("title").value.trim();
-    const desc = document.getElementById("desc").value.trim();
-    const price = document.getElementById("price").value.trim();
-
-    if (!title || !desc || !price) {
-        alert("Fill all fields!");
-        return;
+  <!-- Estilos opcionales -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      padding: 20px;
     }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+  </style>
+</head>
 
-    await addDoc(collection(db, "posts"), {
-        title,
-        desc,
-        price,
-        status: "pending",
-        createdAt: serverTimestamp()
-    });
+<body>
+  <div class="container">
+    <h2>Crear Publicación</h2>
 
-    alert("Listing sent! Wait for admin approval.");
-    window.location.href = "listing.html";
-});
-</script>
+    <input id="title" type="text" placeholder="Título" />
+    <textarea id="description" placeholder="Descripción"></textarea>
+    <input id="price" type="number" placeholder="Precio (opcional)" />
+
+    <button id="publishBtn">Publicar</button>
+  </div>
+
+  <!-- Firebase -->
+  <script type="module" src="./post.js"></script>
 
 </body>
 </html>
