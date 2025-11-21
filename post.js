@@ -1,54 +1,48 @@
-import { 
-  db, 
-  collection, 
-  addDoc, 
-  serverTimestamp 
-} from "./firebase.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-import { 
-  getAuth, 
-  onAuthStateChanged 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+// TU CONFIG DE FIREBASE
+const firebaseConfig = {
+  apiKey: "TU_API_KEY",
+  authDomain: "safe-sphere.firebaseapp.com",
+  projectId: "safe-sphere",
+  storageBucket: "safe-sphere.appspot.com",
+  messagingSenderId: "xxxx",
+  appId: "xxxx"
+};
 
-const auth = getAuth();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
 
-onAuthStateChanged(auth, user => {
+// BOTÓN PUBLICAR
+const publishBtn = document.getElementById("publishBtn");
 
+publishBtn.addEventListener("click", async () => {
+  const title = document.getElementById("title").value;
+  const description = document.getElementById("description").value;
+  const price = document.getElementById("price").value;
+
+  const user = auth.currentUser;
   if (!user) {
-    alert("Debes iniciar sesión para publicar.");
-    window.location.href = "login.html";
+    alert("Debes iniciar sesión");
     return;
   }
 
-  const publishBtn = document.getElementById("publishBtn");
+  try {
+    await addDoc(collection(db, "posts"), {
+      title,
+      description,
+      price,
+      uid: user.uid,
+      createdAt: Date.now()
+    });
 
-  publishBtn.addEventListener("click", async () => {
-    const title = document.getElementById("title").value.trim();
-    const desc = document.getElementById("desc").value.trim();
-    const price = document.getElementById("price").value.trim();
-
-    if (!title || !desc) {
-      alert("Completa todos los campos obligatorios.");
-      return;
-    }
-
-    try {
-      await addDoc(collection(db, "posts"), {
-        title,
-        desc,
-        price,
-        status: "pending",
-        createdAt: serverTimestamp(),
-        userId: user.uid
-      });
-
-      alert("Publicación enviada correctamente. Espera aprobación.");
-      window.location.href = "listing.html";
-
-    } catch (error) {
-      console.error("Error al publicar:", error);
-      alert("Error al guardar la publicación.");
-    }
-  });
-
+    alert("Post creado correctamente 🎉");
+  } catch (error) {
+    console.error("Error al guardar:", error);
+    alert("No se pudo publicar");
+  }
 });
+
