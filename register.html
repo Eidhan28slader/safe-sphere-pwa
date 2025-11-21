@@ -1,3 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SafeSphere - Create Account</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <style>
+    .auth-box {
+      background:#111;
+      width:90%;
+      max-width:380px;
+      margin:70px auto;
+      padding:25px;
+      border-radius:16px;
+      text-align:center;
+      box-shadow:0 10px 25px rgba(0,0,0,.5);
+    }
+    .auth-box h2 {
+      margin-bottom:20px;
+      font-weight:600;
+    }
+    .auth-link {
+      color:#3e6ef2;
+      cursor:pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="auth-box">
+  <h2>Create Account</h2>
+
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button id="regBtn">Register</button>
+
+  <p>Already have an account?  
+     <a href="login.html" class="auth-link">Login</a>
+  </p>
+</div>
+
 <script type="module">
 import { auth, createUserWithEmailAndPassword } from "./firebase.js";
 
@@ -13,3 +57,8 @@ document.getElementById("regBtn").onclick = function() {
     .catch(err => alert(err.message));
 }
 </script>
+
+</body>
+</html>
+
+
