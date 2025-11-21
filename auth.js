@@ -1,44 +1,43 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { 
-  getAuth, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    auth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword
+} from "./firebase.js";
 
-const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "safe-sphere.firebaseapp.com",
-  projectId: "safe-sphere",
-  storageBucket: "safe-sphere.appspot.com",
-  messagingSenderId: "xxxx",
-  appId: "xxxx"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const registerForm = document.getElementById("registerBtn");
+const loginForm = document.getElementById("loginBtn");
 
 // REGISTER
-document.getElementById("registerBtn")?.addEventListener("click", () => {
-  const email = document.getElementById("email").value;
-  const pass = document.getElementById("password").value;
+if (registerForm) {
+    registerForm.addEventListener("click", async () => {
+        const email = document.getElementById("email").value;
+        const pass = document.getElementById("password").value;
 
-  createUserWithEmailAndPassword(auth, email, pass)
-    .then(() => {
-      alert("Cuenta creada!");
-      window.location.href = "index.html";
-    })
-    .catch(err => alert(err.message));
-});
+        try {
+            await createUserWithEmailAndPassword(auth, email, pass);
+            alert("Cuenta creada!");
+            window.location.href = "post.html";
+        } catch (e) {
+            console.error(e);
+            alert("Error al crear cuenta: " + e.message);
+        }
+    });
+}
 
 // LOGIN
-document.getElementById("loginBtn")?.addEventListener("click", () => {
-  const email = document.getElementById("email").value;
-  const pass = document.getElementById("password").value;
+if (loginForm) {
+    loginForm.addEventListener("click", async () => {
+        const email = document.getElementById("email").value;
+        const pass = document.getElementById("password").value;
 
-  signInWithEmailAndPassword(auth, email, pass)
-    .then(() => {
-      alert("Sesión iniciada");
-      window.location.href = "index.html";
-    })
-    .catch(err => alert(err.message));
-});
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+            alert("Inicio de sesión correcto!");
+            window.location.href = "post.html";
+        } catch (e) {
+            console.error(e);
+            alert("Error al iniciar sesión: " + e.message);
+        }
+    });
+}
+
