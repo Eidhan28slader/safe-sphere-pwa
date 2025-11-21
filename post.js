@@ -1,4 +1,8 @@
-import { db, auth, collection, addDoc, serverTimestamp } from "./firebase.js";
+import { db, collection, addDoc, serverTimestamp } from "./firebase.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+// Firebase Auth
+const auth = getAuth();
 
 // DOM Elements
 const titleInput = document.getElementById("title");
@@ -14,16 +18,12 @@ publishBtn.addEventListener("click", async () => {
 
     const user = auth.currentUser;
 
-  if (!user) {
-    alert("Debes iniciar sesión para publicar.");
-    setTimeout(() => {
-        window.location.href = "login.html";
-    }, 100);
-    return;
-}
-
-
-
+    // 🔐 Si no está logueado → redirigir al login
+    if (!user) {
+        alert("Debes iniciar sesión para publicar.");
+        window.location.href = "login.html"; 
+        return;
+    }
 
     const title = titleInput.value.trim();
     const description = descriptionInput.value.trim();
@@ -40,7 +40,7 @@ publishBtn.addEventListener("click", async () => {
             description,
             price: price || null,
             createdAt: serverTimestamp(),
-            userId: user.uid   // 👈 NECESARIO PARA RULES
+            userId: user.uid
         });
 
         alert("Post successfully published!");
@@ -54,6 +54,5 @@ publishBtn.addEventListener("click", async () => {
         alert("Error publishing post. Check the console.");
     }
 });
-
 
 
