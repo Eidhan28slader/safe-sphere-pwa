@@ -1,9 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SafeSphere - Home</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+  <img src="assets/logo.png" class="logo">
+  <a href="index.html">Home</a>
+  <a href="listing.html">Listing</a>
+  <a href="post.html">Post</a>
+  <a href="admin.html">Admin</a>
+</nav>
+
+<header class="banner">
+  Find verified, safe student housing in Niagara.
+</header>
+
+<section id="listings-container">
+  <p>Loading...</p>
+</section>
+
 <script type="module">
 import { db, onSnapshot, collection, query, orderBy } from "./firebase.js";
 
 const box = document.getElementById("listings-container");
 
-// 🎨 Lista de imágenes aleatorias
+/* 🎨 Imágenes aleatorias */
 const houseImages = [
   "assets/houses/house1.jpg",
   "assets/houses/house2.jpg",
@@ -12,12 +38,11 @@ const houseImages = [
   "assets/houses/house5.jpg"
 ];
 
-// Función que devuelve 1 imagen random
 function getRandomImage() {
   return houseImages[Math.floor(Math.random() * houseImages.length)];
 }
 
-// 🔥 Cargar posts aprobados
+/* 🔥 Cargar posts aprobados */
 onSnapshot(
   query(collection(db, "posts"), orderBy("createdAt", "desc")),
   snap => {
@@ -27,16 +52,20 @@ onSnapshot(
       const p = doc.data();
       if (p.status !== "approved") return;
 
+      const img = getRandomImage();
+
       box.innerHTML += `
-      <div class="card">
-          <img src="${getRandomImage()}" class="card-img">
+        <div class="card">
+          <img src="${img}" style="width:100%; height:260px; object-fit:cover; border-radius:12px;">
           <h3>${p.title}</h3>
           <p>${p.desc}</p>
           <p><b>$${p.price}</b></p>
-      </div>
+        </div>
       `;
     });
   }
 );
 </script>
 
+</body>
+</html>
