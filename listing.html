@@ -3,6 +3,7 @@ import { db, collection, onSnapshot, query, orderBy } from "./firebase.js";
 
 const postsBox = document.getElementById("posts");
 
+// 🎨 Lista de imágenes aleatorias
 const houseImages = [
   "assets/houses/house1.jpg",
   "assets/houses/house2.jpg",
@@ -11,43 +12,45 @@ const houseImages = [
   "assets/houses/house5.jpg"
 ];
 
+// Función para escoger 1 imagen random
 function getRandomImage() {
   return houseImages[Math.floor(Math.random() * houseImages.length)];
 }
 
+// 🔥 Mostrar solo posts aprobados
 onSnapshot(
-  query(collection(db, "posts"), orderBy("createdAt", "desc")),
-  snapshot => {
-    postsBox.innerHTML = "";
+    query(collection(db, "posts"), orderBy("createdAt", "desc")),
+    snapshot => {
 
-    let hasData = false;
+        postsBox.innerHTML = "";
 
-    snapshot.forEach(doc => {
-      const p = doc.data();
-      if (p.status !== "approved") return;
+        let hasData = false;
 
-      hasData = true;
+        snapshot.forEach(doc => {
+            const p = doc.data();
 
-      const img = getRandomImage();
-      console.log("IMG LOADED:", img); // 👈 VERIFICAR EN CONSOLA
+            if (p.status !== "approved") return;
 
-      postsBox.innerHTML += `
-        <div class="card">
-          <img src="${img}" style="width:100%; height:260px; object-fit:cover; border-radius:12px;">
-          <div class="card-body">
-            <h3>${p.title}</h3>
-            <p>${p.desc}</p>
-            <p><strong>Price:</strong> $${p.price}</p>
-            <span class="badge verified">Approved</span>
-          </div>
-        </div>
-      `;
-    });
+            hasData = true;
 
-    if (!hasData) {
-      postsBox.innerHTML = "<p>No approved posts yet.</p>";
+            postsBox.innerHTML += `
+                <div class="card">
+                    <img src="${getRandomImage()}" class="card-img">
+                    <div class="card-body">
+                        <h3>${p.title}</h3>
+                        <p>${p.desc}</p>
+                        <p><strong>Price:</strong> $${p.price}</p>
+                        <span class="badge verified">Approved</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        if (!hasData) {
+            postsBox.innerHTML = "<p>No approved posts yet.</p>";
+        }
     }
-  }
 );
 </script>
+
 
