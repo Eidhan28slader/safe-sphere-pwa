@@ -1,34 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>SafeSphere - Listings</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<nav>
-    <a href="index.html">Home</a>
-    <a href="listing.html" class="active">Listing</a>
-    <a href="post.html">Post</a>
-    <a href="admin.html">Admin</a>
-</nav>
-
-<section class="section-box">
-    <h2>Available Listings</h2>
-    <p>Approved posts appear here automatically.</p>
-</section>
-
-<section class="section-box">
-    <div id="posts">Loading...</div>
-</section>
-
 <script type="module">
 import { db, collection, onSnapshot, query, orderBy } from "./firebase.js";
 
 const postsBox = document.getElementById("posts");
 
-// Listen for approved posts
+// 🎨 Lista de imágenes aleatorias
+const houseImages = [
+  "assets/houses/house1.jpg",
+  "assets/houses/house2.jpg",
+  "assets/houses/house3.jpg",
+  "assets/houses/house4.jpg",
+  "assets/houses/house5.jpg"
+];
+
+// Función para escoger 1 imagen random
+function getRandomImage() {
+  return houseImages[Math.floor(Math.random() * houseImages.length)];
+}
+
+// 🔥 Mostrar solo posts aprobados
 onSnapshot(
     query(collection(db, "posts"), orderBy("createdAt", "desc")),
     snapshot => {
@@ -40,13 +29,13 @@ onSnapshot(
         snapshot.forEach(doc => {
             const p = doc.data();
 
-            // Show ONLY approved posts
             if (p.status !== "approved") return;
 
             hasData = true;
 
             postsBox.innerHTML += `
                 <div class="card">
+                    <img src="${getRandomImage()}" class="card-img">
                     <div class="card-body">
                         <h3>${p.title}</h3>
                         <p>${p.desc}</p>
@@ -63,7 +52,3 @@ onSnapshot(
     }
 );
 </script>
-
-</body>
-</html>
-
