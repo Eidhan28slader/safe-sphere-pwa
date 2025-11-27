@@ -25,12 +25,13 @@
   <p>Approved posts appear here automatically.</p>
 </section>
 
-<!-- 🔥 ESTE CONTENEDOR ES EL QUE FALTABA -->
+<!-- 🔥 ESTE ES EL CONTENEDOR NECESARIO -->
 <section id="listings-container">
   <p>Loading...</p>
 </section>
 
 </main>
+
 
 <script type="module">
 
@@ -39,7 +40,7 @@
 
   const box = document.getElementById("listings-container");
 
-  // 🔥 imágenes aleatorias
+  // 🔥 Lista de imágenes aleatorias
   const houseImages = [
     "assets/houses/house1.jpg",
     "assets/houses/house2.jpg",
@@ -48,26 +49,33 @@
     "assets/houses/house5.jpg"
   ];
 
-  const getRandomImage = () =>
-    houseImages[Math.floor(Math.random() * houseImages.length)];
+  function randomImage() {
+    return houseImages[Math.floor(Math.random() * houseImages.length)];
+  }
 
+  // 🔥 Cargar LISTINGS aprobados
   onSnapshot(
     query(collection(db, "posts"), orderBy("createdAt", "desc")),
     snap => {
       box.innerHTML = "";
+
       snap.forEach(doc => {
         const p = doc.data();
+
+        // mostrar solo los aprobados
         if (p.status !== "approved") return;
 
-        const img = getRandomImage();
+        const img = randomImage();
 
         box.innerHTML += `
           <div class="card">
-            <img src="${img}" class="house-img">
+            <img src="${img}" class="card-img" alt="House image">
+
             <h3>${p.title}</h3>
             <p>${p.desc}</p>
             <p><b>Price: $${p.price}</b></p>
-            <span class="badge green">Approved</span>
+
+            <span class="badge verified">Approved</span>
           </div>
         `;
       });
@@ -78,6 +86,3 @@
 
 </body>
 </html>
-
-
-
