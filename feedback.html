@@ -19,21 +19,23 @@
   <a href="feedback.html">Feedback</a>
 </nav>
 
-  <main>
-  
-<section class="section-box">
-  <h2>Feedback</h2>
-  <p>This page links to a feedback form where students can rate the app.</p>
-  <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLScaGsjdY7dXhb7-18v4F3pJlr80RYV-V4QDAc7wUlhw5hJJkg/viewform?usp=dialog" target="_blank">Open Feedback Form</a>
-</section>
+<main>
+  <section class="section-box">
+    <h2>Feedback</h2>
+    <p>Your opinion matters! Help us improve SafeSphere by filling out this quick form.</p>
 
-  </main>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js');
-      });
-    }
-  </script>
+    <!-- 🔥 ESTE ES EL BOTÓN DEL FORMULARIO -->
+    <a 
+      class="btn"
+      href="https://docs.google.com/forms/d/e/1FAIpQLScaGsjdY7dXhb7-18v4F3pJlr80RYV-V4QDAc7wUlhw5hJJkg/viewform?usp=dialog"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Open Feedback Form
+    </a>
+  </section>
+</main>
+
+<!-- ❌ QUITAMOS EL SERVICE WORKER EN ESTA PÁGINA -->
 </body>
 </html>
