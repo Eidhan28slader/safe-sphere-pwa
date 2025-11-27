@@ -1,56 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SafeSphere - Listings</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+  <img src="assets/logo.png" class="logo" alt="SafeSphere logo">
+  <a href="index.html">Home</a>
+  <a href="listing.html">Listing</a>
+  <a href="post.html">Post</a>
+  <a href="admin.html">Admin</a>
+  <a href="roommate.html">Roommates</a>
+  <a href="feedback.html">Feedback</a>
+</nav>
+
+<main>
+
+<section class="section-box">
+  <h2>Available Listings</h2>
+  <p>Approved posts appear here automatically.</p>
+</section>
+
+<!-- 🔥 ESTE CONTENEDOR ES EL QUE FALTABA -->
+<section id="listings-container">
+  <p>Loading...</p>
+</section>
+
+</main>
+
 <script type="module">
-import { db, collection, onSnapshot, query, orderBy } from "./firebase.js";
 
-const postsBox = document.getElementById("posts");
+  import { db, onSnapshot, collection, query, orderBy } 
+    from "./firebase.js";
 
-// 🎨 Lista de imágenes aleatorias
-const houseImages = [
-  "assets/houses/house1.jpg",
-  "assets/houses/house2.jpg",
-  "assets/houses/house3.jpg",
-  "assets/houses/house4.jpg",
-  "assets/houses/house5.jpg"
-];
+  const box = document.getElementById("listings-container");
 
-// Función para escoger 1 imagen random
-function getRandomImage() {
-  return houseImages[Math.floor(Math.random() * houseImages.length)];
-}
+  // 🔥 imágenes aleatorias
+  const houseImages = [
+    "assets/houses/house1.jpg",
+    "assets/houses/house2.jpg",
+    "assets/houses/house3.jpg",
+    "assets/houses/house4.jpg",
+    "assets/houses/house5.jpg"
+  ];
 
-// 🔥 Mostrar solo posts aprobados
-onSnapshot(
+  const getRandomImage = () =>
+    houseImages[Math.floor(Math.random() * houseImages.length)];
+
+  onSnapshot(
     query(collection(db, "posts"), orderBy("createdAt", "desc")),
-    snapshot => {
+    snap => {
+      box.innerHTML = "";
+      snap.forEach(doc => {
+        const p = doc.data();
+        if (p.status !== "approved") return;
 
-        postsBox.innerHTML = "";
+        const img = getRandomImage();
 
-        let hasData = false;
-
-        snapshot.forEach(doc => {
-            const p = doc.data();
-
-            if (p.status !== "approved") return;
-
-            hasData = true;
-
-            postsBox.innerHTML += `
-                <div class="card">
-                    <img src="${getRandomImage()}" class="card-img">
-                    <div class="card-body">
-                        <h3>${p.title}</h3>
-                        <p>${p.desc}</p>
-                        <p><strong>Price:</strong> $${p.price}</p>
-                        <span class="badge verified">Approved</span>
-                    </div>
-                </div>
-            `;
-        });
-
-        if (!hasData) {
-            postsBox.innerHTML = "<p>No approved posts yet.</p>";
-        }
+        box.innerHTML += `
+          <div class="card">
+            <img src="${img}" class="house-img">
+            <h3>${p.title}</h3>
+            <p>${p.desc}</p>
+            <p><b>Price: $${p.price}</b></p>
+            <span class="badge green">Approved</span>
+          </div>
+        `;
+      });
     }
-);
+  );
+
 </script>
+
+</body>
+</html>
+
 
 
