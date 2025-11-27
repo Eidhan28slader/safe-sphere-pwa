@@ -1,38 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>SafeSphere - Roommates</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0b1830">
-</head>
-<body>
-  
-<nav>
-  <img src="assets/logo.png" class="logo" alt="SafeSphere logo">
-  <a href="index.html">Home</a>
-  <a href="listing.html">Listing</a>
-  <a href="post.html">Post</a>
-  <a href="admin.html">Admin</a>
-  <a href="roommate.html">Roommates</a>
-  <a href="feedback.html">Feedback</a>
-</nav>
+import { db, collection, onSnapshot, query, orderBy } from "./firebase.js";
 
-  <main>
-  
-<section class="section-box">
-  <h2>Roommate Match</h2>
-  <p>Students can create a profile and see compatible roommate matches.</p>
-</section>
+const container = document.getElementById("roommates-container");
 
-  </main>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        navigator.serviceWorker.register('service-worker.js');
-      });
-    }
-  </script>
-</body>
-</html>
+const profileImages = [
+  "assets/roommates/p1.jpg",
+  "assets/roommates/p2.jpg",
+  "assets/roommates/p3.jpg",
+  "assets/roommates/p4.jpg"
+];
+
+function randomProfile() {
+  return profileImages[Math.floor(Math.random() * profileImages.length)];
+}
+
+onSnapshot(
+  query(collection(db, "roommates"), orderBy("createdAt", "desc")),
+  snap => {
+    container.innerHTML = "";
+
+    snap.forEach(doc => {
+      const r = doc.data();
+      const img = randomProfile();
+
+      container.innerHTML += `
+        <div class="card">
+          <img src="${img}" class="card-img" alt="Roommate">
+          <h3>${r.name}</h3>
+          <p>${r.bio}</p>
+          <p><b>Budget:</b> $${r.budget}</p>
+          <p><b>Age:</b> ${r.age}</p>
+        </div>
+      `;
+    });
+  }
+);
