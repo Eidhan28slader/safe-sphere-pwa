@@ -1,142 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SafeSphere - Listings</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+<body>
 
-body {
-  background:#0b1830;
-  font-family:'Poppins', sans-serif;
-  margin:0;
-  color:white;
-}
+<nav>
+  <img src="assets/logo.png" class="logo" alt="SafeSphere logo">
+  <a href="index.html">Home</a>
+  <a href="listing.html">Listing</a>
+  <a href="post.html">Post</a>
+  <a href="admin.html">Admin</a>
+  <a href="roommate.html">Roommates</a>
+  <a href="feedback.html">Feedback</a>
+</nav>
 
-nav {
-  background:#000000;
-  padding:15px 30px;
-  display:flex;
-  gap:25px;
-  align-items:center;
-  position:sticky;
-  top:0;
-  z-index:99;
-}
+<main>
 
-nav a {
-  text-decoration:none;
-  color:#ffffff;
-  font-weight:500;
-}
+<section class="section-box">
+  <h2>Available Listings</h2>
+  <p>Approved posts appear here automatically.</p>
+</section>
 
-nav a:hover {
-  color:#3e6ef2;
-}
+<!-- 🔥 ESTE ES EL CONTENEDOR NECESARIO -->
+<section id="listings-container">
+  <p>Loading...</p>
+</section>
 
-.logo {
-  height:40px;
-  margin-right:20px;
-}
+</main>
 
-.banner {
-  background:#3e6ef2;
-  color:white;
-  padding:40px;
-  text-align:center;
-  font-size:26px;
-  font-weight:600;
-}
 
-main {
-  padding-bottom:40px;
-}
+<script type="module">
 
-.filters {
-  background:#111111;
-  color:white;
-  padding:15px 20px;
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
-  align-items:center;
-}
+  import { db, onSnapshot, collection, query, orderBy } 
+    from "./firebase.js";
 
-.filters label {
-  font-size:14px;
-}
+  const box = document.getElementById("listings-container");
 
-.filters input {
-  margin-left:5px;
-}
+  // 🔥 Lista de imágenes aleatorias
+  const houseImages = [
+    "assets/houses/house1.jpg",
+    "assets/houses/house2.jpg",
+    "assets/houses/house3.jpg",
+    "assets/houses/house4.jpg",
+    "assets/houses/house5.jpg"
+  ];
 
-.card, .post, .admin-card {
-  background:#111111;
-  color:white;
-  width:90%;
-  margin:25px auto;
-  border-radius:18px;
-  padding:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,.5);
-}
+  function randomImage() {
+    return houseImages[Math.floor(Math.random() * houseImages.length)];
+  }
 
-.card img, .card-img {
-  width:100%;
-  height:260px;
-  object-fit:cover;
-  border-radius:12px;
-}
+  // 🔥 Cargar LISTINGS aprobados
+  onSnapshot(
+    query(collection(db, "posts"), orderBy("createdAt", "desc")),
+    snap => {
+      box.innerHTML = "";
 
-.badge {
-  padding:5px 10px;
-  border-radius:999px;
-  font-size:13px;
-  color:white;
-  font-weight:500;
-  margin-right:6px;
-}
+      snap.forEach(doc => {
+        const p = doc.data();
 
-.sphere-score { background:#3e6ef2; }
-.verified { background:#00b894; }
+        // mostrar solo los aprobados
+        if (p.status !== "approved") return;
 
-.btn, button {
-  padding:10px 16px;
-  background:#3e6ef2;
-  color:white;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:14px;
-  margin-top:10px;
-}
+        const img = randomImage();
 
-button:hover {
-  background:#2c4bd9;
-}
+        box.innerHTML += `
+          <div class="card">
+            <img src="${img}" class="card-img" alt="House image">
 
-.section-box {
-  width:90%;
-  margin:20px auto;
-  background:#111111;
-  color:white;
-  padding:20px;
-  border-radius:16px;
-}
+            <h3>${p.title}</h3>
+            <p>${p.desc}</p>
+            <p><b>Price: $${p.price}</b></p>
 
-input, textarea {
-  width:95%;
-  padding:10px;
-  border-radius:10px;
-  background:#0d0d0d;
-  border:1px solid #3e6ef2;
-  color:white;
-  margin-bottom:15px;
-}
+            <span class="badge verified">Approved</span>
+          </div>
+        `;
+      });
+    }
+  );
 
-textarea {
-  height:100px;
-  resize:none;
-}
+</script>
 
-.admin-item {
-  background:#111111;
-  padding:20px;
-  border-radius:16px;
-  margin-bottom:18px;
-}
-
+</body>
+</html>
