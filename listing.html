@@ -25,7 +25,6 @@
   <p>Approved posts appear here automatically.</p>
 </section>
 
-<!-- 🔥 ESTE ES EL CONTENEDOR NECESARIO -->
 <section id="listings-container">
   <p>Loading...</p>
 </section>
@@ -40,7 +39,6 @@
 
   const box = document.getElementById("listings-container");
 
-  // 🔥 Lista de imágenes aleatorias
   const houseImages = [
     "assets/houses/house1.jpg",
     "assets/houses/house2.jpg",
@@ -53,16 +51,16 @@
     return houseImages[Math.floor(Math.random() * houseImages.length)];
   }
 
-  // 🔥 Cargar LISTINGS aprobados
   onSnapshot(
     query(collection(db, "posts"), orderBy("createdAt", "desc")),
     snap => {
+
       box.innerHTML = "";
 
       snap.forEach(doc => {
+
         const p = doc.data();
 
-        // mostrar solo los aprobados
         if (p.status !== "approved") return;
 
         const img = randomImage();
@@ -72,7 +70,7 @@
             <img src="${img}" class="card-img" alt="House image">
 
             <h3>${p.title}</h3>
-            <p>${p.desc}</p>
+            <p>${p.description}</p>
             <p><b>Price: $${p.price}</b></p>
 
             <span class="badge verified">Approved</span>
