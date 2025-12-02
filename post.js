@@ -1,4 +1,3 @@
-// ⬇️ PRIMERO: importar Firebase desde TU firebase.js
 import { 
     auth, 
     db, 
@@ -8,7 +7,6 @@ import {
     onAuthStateChanged 
 } from "./firebase.js";
 
-// ⬇️ DOM elements
 const titleInput = document.getElementById("title");
 const descriptionInput = document.getElementById("description");
 const priceInput = document.getElementById("price");
@@ -16,15 +14,12 @@ const publishBtn = document.getElementById("publishBtn");
 
 const postsRef = collection(db, "posts");
 
-// 🔥 Detecta si el usuario está logeado (MUY IMPORTANTE)
 let currentUser = null;
 
 onAuthStateChanged(auth, (user) => {
     currentUser = user;
-    console.log("AUTH STATE:", user);
 });
 
-// ⬇️ PUBLICAR
 publishBtn.addEventListener("click", async () => {
 
     if (!currentUser) {
@@ -49,7 +44,19 @@ publishBtn.addEventListener("click", async () => {
             price,
             status: "pending",
             createdAt: serverTimestamp(),
-            userId: currentUser.uid
+            userId: currentUser.uid,
+
+            nearby: {
+                miniMarket: document.getElementById("near-mini").checked,
+                supermarket: document.getElementById("near-super").checked,
+                pharmacy: document.getElementById("near-pharma").checked,
+                busStop: document.getElementById("near-bus").checked,
+                university: document.getElementById("near-uni").checked,
+                hospital: document.getElementById("near-hosp").checked
+            },
+
+            securityLevel: document.getElementById("security-level").value,
+            plusvalia: document.getElementById("plusvalia").value
         });
 
         alert("Post successfully published!");
@@ -59,7 +66,8 @@ publishBtn.addEventListener("click", async () => {
         priceInput.value = "";
 
     } catch (e) {
-        console.error("Error:", e);
+        console.error(e);
         alert("Error publishing post. Check console.");
     }
 });
+
