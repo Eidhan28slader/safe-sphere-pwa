@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>SafeSphere - Roommates</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <title>SafeSphere - Roommates</title>
+    <link rel="stylesheet" href="/safe-sphere-pwa/styles.css">
 </head>
 
 <body>
@@ -18,7 +18,6 @@
   <a href="/safe-sphere-pwa/feedback.html">Feedback</a>
 </nav>
 
-
 <main>
 
 <section class="section-box">
@@ -26,42 +25,44 @@
   <p>See students looking for shared housing.</p>
 </section>
 
-<section id="roommates-container">
+<section id="roommates-container" class="listings-container">
   <p>Loading...</p>
 </section>
 
 </main>
 
+<!-- SCRIPT CORRECTO -->
 <script type="module">
-import { db, collection, onSnapshot, query, orderBy } from "/safe-sphere-pwa/firebase.js";
+import { 
+  db, 
+  collection, 
+  query, 
+  orderBy, 
+  onSnapshot 
+} from "/safe-sphere-pwa/firebase.js";
 
 const container = document.getElementById("roommates-container");
 
-const profileImages = [
-  "assets/roommates/p1.jpg",
-  "assets/roommates/p2.jpg",
-  "assets/roommates/p3.jpg",
-  "assets/roommates/p4.jpg"
-];
-
-function randomProfile() {
-  return profileImages[Math.floor(Math.random() * profileImages.length)];
-}
+const roommatesRef = collection(db, "roommates");
 
 onSnapshot(
-  query(collection(db, "roommates"), orderBy("createdAt", "desc")),
+  query(roommatesRef, orderBy("createdAt", "desc")),
   snap => {
     container.innerHTML = "";
 
+    if (snap.empty) {
+      container.innerHTML = "<p>No roommates found.</p>";
+      return;
+    }
+
     snap.forEach(doc => {
       const r = doc.data();
-      const img = randomProfile();
-
+      
       container.innerHTML += `
         <div class="card">
-          <img src="${img}" class="card-img" alt="Roommate">
+          <img src="/safe-sphere-pwa/assets/roommates/default.jpg" class="card-img" alt="Roommate">
           <h3>${r.name}</h3>
-          <p>${r.bio}</p>
+          <p>${r.bio ?? "No biography provided."}</p>
           <p><b>Budget:</b> $${r.budget}</p>
           <p><b>Age:</b> ${r.age}</p>
         </div>
