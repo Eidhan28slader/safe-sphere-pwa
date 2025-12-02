@@ -9,68 +9,79 @@
 <body>
 
 <nav>
-  <img src="/safe-sphere-pwa/assets/logo.png" class="logo" alt="SafeSphere logo">
-  <a href="/safe-sphere-pwa/index.html">Home</a>
-  <a href="/safe-sphere-pwa/listing.html">Listing</a>
-  <a href="/safe-sphere-pwa/post.html">Post</a>
-  <a href="/safe-sphere-pwa/admin.html">Admin</a>
-  <a href="/safe-sphere-pwa/roommates.html">Roommates</a>
-  <a href="/safe-sphere-pwa/feedback.html">Feedback</a>
-    <a href="add-roommate.html">Add Roommate</a>
-
+    <img src="/safe-sphere-pwa/assets/logo.png" class="logo" alt="SafeSphere logo">
+    <a href="/safe-sphere-pwa/index.html">Home</a>
+    <a href="/safe-sphere-pwa/listing.html">Listing</a>
+    <a href="/safe-sphere-pwa/post.html">Post</a>
+    <a href="/safe-sphere-pwa/admin.html">Admin</a>
+    <a href="/safe-sphere-pwa/roommates.html" class="active">Roommates</a>
+    <a href="/safe-sphere-pwa/feedback.html">Feedback</a>
+    <a href="/safe-sphere-pwa/add-roommate.html">Add Roommate</a>
 </nav>
 
 <main>
 
 <section class="section-box">
-  <h2>Find Roommates</h2>
-  <p>See students looking for shared housing.</p>
+    <h2>Find Roommates</h2>
+    <p>See students looking for shared housing.</p>
 </section>
 
 <section id="roommates-container" class="listings-container">
-  <p>Loading...</p>
+    <p>Loading...</p>
 </section>
 
 </main>
 
-<!-- SCRIPT CORRECTO -->
+<!-- SCRIPT ROOMMATES -->
 <script type="module">
-import { 
-  db, 
-  collection, 
-  query, 
-  orderBy, 
-  onSnapshot 
+import {
+    db,
+    collection,
+    query,
+    orderBy,
+    onSnapshot
 } from "/safe-sphere-pwa/firebase.js";
 
 const container = document.getElementById("roommates-container");
 
+// Colección
 const roommatesRef = collection(db, "roommates");
 
+// Escuchar cambios en Firestore
 onSnapshot(
-  query(roommatesRef, orderBy("createdAt", "desc")),
-  snap => {
-    container.innerHTML = "";
+    query(roommatesRef, orderBy("createdAt", "desc")),
+    (snap) => {
+        container.innerHTML = "";
 
-    if (snap.empty) {
-      container.innerHTML = "<p>No roommates found.</p>";
-      return;
+        if (snap.empty) {
+            container.innerHTML = "<p>No roommates found.</p>";
+            return;
+        }
+
+        snap.forEach(doc => {
+            const r = doc.data();
+
+            const name = r.name ?? "Unnamed";
+            const bio = r.bio ?? "No biography provided.";
+            const budget = r.budget ?? "Unknown";
+            const age = r.age ?? "Unknown";
+
+            container.innerHTML += `
+                <div class="card">
+                    <img src="/safe-sphere-pwa/assets/roommates/default.jpg"
+                         class="card-img"
+                         alt="Roommate"
+                         style="object-fit:cover; height:250px;" />
+
+                    <h3>${name}</h3>
+                    <p>${bio}</p>
+
+                    <p><b>Budget:</b> $${budget}</p>
+                    <p><b>Age:</b> ${age}</p>
+                </div>
+            `;
+        });
     }
-
-    snap.forEach(doc => {
-      const r = doc.data();
-      
-      container.innerHTML += `
-        <div class="card">
-          <img src="/safe-sphere-pwa/assets/roommates/default.jpg" class="card-img" alt="Roommate">
-          <h3>${r.name}</h3>
-          <p>${r.bio ?? "No biography provided."}</p>
-          <p><b>Budget:</b> $${r.budget}</p>
-          <p><b>Age:</b> ${r.age}</p>
-        </div>
-      `;
-    });
-  }
 );
 </script>
 
