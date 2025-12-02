@@ -71,7 +71,10 @@
     <h3>${p.title}</h3>
     <p>${p.desc}</p>
     <p><b>Price: $${p.price}</b></p>
-
+    <div class="sphere-score-box">
+  <span class="sphere-label">SphereScore:</span>
+  <span class="sphere-value">${p.sphereScore}/100</span>
+</div>
     <div class="safety-box">
       <p><b>Security:</b> ${p.securityLevel ?? "Not specified"}</p>
       <p><b>Plusvalía:</b> ${p.plusvalia ?? "Not specified"}</p>
