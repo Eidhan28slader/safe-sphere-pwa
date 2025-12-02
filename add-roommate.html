@@ -1,77 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Add Roommate - SafeSphere</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <title>Add Roommate</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
 <nav>
-  <img src="assets/logo.png" class="logo">
-  <a href="index.html">Home</a>
-  <a href="listing.html">Listing</a>
-  <a href="post.html">Post</a>
-  <a href="admin.html">Admin</a>
-  <a href="roommates.html">Roommates</a>
+    <img src="assets/logo.png" class="logo">
+    <a href="index.html">Home</a>
+    <a href="listing.html">Listing</a>
+    <a href="post.html">Post</a>
+    <a href="admin.html">Admin</a>
+    <a href="roommates.html">Roommates</a>
+    <a href="feedback.html">Feedback</a>
 </nav>
 
+<main>
+
 <section class="section-box">
-  <h2>Add Roommate</h2>
-  <p>Publish your roommate profile.</p>
+    <h2>Add New Roommate</h2>
+    <p>Fill the information below:</p>
+
+    <input id="rm-name" placeholder="Full Name">
+    <input id="rm-age" type="number" placeholder="Age">
+    <input id="rm-budget" type="number" placeholder="Monthly Budget">
+    <textarea id="rm-bio" placeholder="Short description"></textarea>
+
+    <label>Upload Photo</label>
+    <input id="rm-photo" type="file" accept="image/*">
+
+    <button id="saveRoommate">Save</button>
 </section>
 
-<div class="card" style="max-width:500px; margin:auto;">
-
-  <input id="rm-name" type="text" placeholder="Name">
-  <input id="rm-age" type="number" placeholder="Age">
-  <input id="rm-budget" type="number" placeholder="Budget">
-  <textarea id="rm-bio" placeholder="Short bio"></textarea>
-
-  <button id="rm-submit">Publish Roommate</button>
-
-</div>
+</main>
 
 <script type="module">
 import {
-  db,
-  collection,
-  addDoc,
-  serverTimestamp
+    db,
+    auth,
+    collection,
+    addDoc,
+    serverTimestamp,
 } from "./firebase.js";
 
-const btn = document.getElementById("rm-submit");
+import {
+    getStorage,
+    ref,
+    uploadBytes,
+    getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-btn.onclick = async () => {
+const saveBtn = document.getElementById("saveRoommate");
+const storage = getStorage();
 
-  const name = document.getElementById("rm-name").value.trim();
-  const age = Number(document.getElementById("rm-age").value);
-  const budget = Number(document.getElementById("rm-budget").value);
-  const bio = document.getElementById("rm-bio").value.trim();
+saveBtn.addEventListener("click", async () => {
 
-  if (!name || !age || !budget || !bio) {
-    alert("Fill all fields.");
-    return;
-  }
+    const name = document.getElementById("rm-name").value;
+    const age = document.getElementById("rm-age").value;
+    const budget = document.getElementById("rm-budget").value;
+    const bio = document.getElementById("rm-bio").value;
+    const file = document.getElementById("rm-photo").files[0];
 
-  try {
+    if (!name || !age || !budget || !bio) {
+        alert("Please complete all fields.");
+        return;
+    }
+
+    let photoURL = "assets/roommates/default.jpg";
+
+    if (file) {
+        const filePath = `roommates/${Date.now()}_${file.name}`;
+        const fileRef = ref(storage, filePath);
+
+        await uploadBytes(fileRef, file);
+        photoURL = await getDownloadURL(fileRef);
+    }
+
     await addDoc(collection(db, "roommates"), {
-      name,
-      age,
-      budget,
-      bio,
-      createdAt: serverTimestamp()
+        name,
+        age,
+        budget,
+        bio,
+        photo: photoURL,
+        createdAt: serverTimestamp(),
+        userId: auth.currentUser ? auth.currentUser.uid : "anonymous"
     });
 
     alert("Roommate added!");
     window.location.href = "roommates.html";
-
-  } catch (err) {
-    console.error(err);
-    alert("Error creating roommate.");
-  }
-};
+});
 </script>
 
 </body>
