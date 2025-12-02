@@ -19,6 +19,24 @@ let currentUser = null;
 onAuthStateChanged(auth, (user) => {
     currentUser = user;
 });
+function calculateSphereScore(security) {
+    switch (security) {
+        case "Very Safe": return 95;
+        case "Safe": return 85;
+        case "Average": return 70;
+        case "Low Safety": return 50;
+        case "Unsafe": return 20;
+        default: return 60;
+    }
+}
+
+function getSphereColor(score) {
+    if (score >= 90) return "#00e676";     // verde brillante
+    if (score >= 80) return "#69f0ae";     // verde claro
+    if (score >= 65) return "#ffd600";     // amarillo
+    if (score >= 40) return "#ff9100";     // naranja
+    return "#ff5252";                      // rojo
+}
 
 publishBtn.addEventListener("click", async () => {
 
@@ -48,7 +66,11 @@ publishBtn.addEventListener("click", async () => {
         default: return 60;
     }
 }
-        await addDoc(postsRef, {
+       const selectedSecurity = document.getElementById("security-level").value;
+const score = calculateSphereScore(selectedSecurity);
+const color = getSphereColor(score);
+
+await addDoc(postsRef, {
     title,
     desc,
     price,
@@ -65,13 +87,13 @@ publishBtn.addEventListener("click", async () => {
         hospital: document.getElementById("near-hosp").checked
     },
 
-    securityLevel: document.getElementById("security-level").value,
+    securityLevel: selectedSecurity,
     plusvalia: document.getElementById("plusvalia").value,
 
-    sphereScore: calculateSphereScore(
-        document.getElementById("security-level").value
-    )
+    sphereScore: score,
+    sphereColor: color
 });
+
         alert("Post successfully published!");
 
         titleInput.value = "";
