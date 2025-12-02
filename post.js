@@ -38,27 +38,40 @@ publishBtn.addEventListener("click", async () => {
     }
 
     try {
+        function calculateSphereScore(security) {
+    switch (security) {
+        case "Very Safe": return 95;
+        case "Safe": return 85;
+        case "Average": return 70;
+        case "Low Safety": return 50;
+        case "Unsafe": return 20;
+        default: return 60;
+    }
+}
         await addDoc(postsRef, {
-            title,
-            desc,
-            price,
-            status: "pending",
-            createdAt: serverTimestamp(),
-            userId: currentUser.uid,
+    title,
+    desc,
+    price,
+    status: "pending",
+    createdAt: serverTimestamp(),
+    userId: currentUser.uid,
 
-            nearby: {
-                miniMarket: document.getElementById("near-mini").checked,
-                supermarket: document.getElementById("near-super").checked,
-                pharmacy: document.getElementById("near-pharma").checked,
-                busStop: document.getElementById("near-bus").checked,
-                university: document.getElementById("near-uni").checked,
-                hospital: document.getElementById("near-hosp").checked
-            },
+    nearby: {
+        miniMarket: document.getElementById("near-mini").checked,
+        supermarket: document.getElementById("near-super").checked,
+        pharmacy: document.getElementById("near-pharma").checked,
+        busStop: document.getElementById("near-bus").checked,
+        university: document.getElementById("near-uni").checked,
+        hospital: document.getElementById("near-hosp").checked
+    },
 
-            securityLevel: document.getElementById("security-level").value,
-            plusvalia: document.getElementById("plusvalia").value
-        });
+    securityLevel: document.getElementById("security-level").value,
+    plusvalia: document.getElementById("plusvalia").value,
 
+    sphereScore: calculateSphereScore(
+        document.getElementById("security-level").value
+    )
+});
         alert("Post successfully published!");
 
         titleInput.value = "";
