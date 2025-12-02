@@ -74,15 +74,16 @@ main {
   padding:20px;
   box-shadow:0 10px 25px rgba(0,0,0,.5);
 }
-
 .card img, .card-img {
   width: 100%;
-  aspect-ratio: 16 / 9;     /* Mantiene proporción profesional */
-  object-fit: cover;        /* Cubre sin deformar */
+  aspect-ratio: 16 / 9;
+  object-fit: contain;     /* Mostrar la imagen completa */
+  object-position: top;    /* Mostrar más parte superior */
+  background: #000;        /* Bordes negros elegantes */
+  padding: 10px;           /* Espacio para que no se pegue */
   border-radius: 12px;
   display: block;
 }
-
 .badge {
   padding:5px 10px;
   border-radius:999px;
