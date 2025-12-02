@@ -8,31 +8,36 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f3f3f3;
+      background: #0b1830;
       padding: 20px;
+      color: white;
     }
     .container {
-      background: white;
+      background: #111;
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 12px;
       max-width: 500px;
       margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
     }
-    input, textarea, button {
+    input, textarea, select, button {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
       font-size: 16px;
+      background: #0d0d0d;
+      color: white;
+      border-radius: 10px;
+      border: 1px solid #3e6ef2;
     }
     button {
-      background: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
+      background: #3e6ef2;
       cursor: pointer;
+      border: none;
+      margin-top: 20px;
     }
-    button:hover { opacity: 0.9; }
+    button:hover { background: #2c4bd9; }
+    h3 { margin-top: 20px; }
   </style>
 </head>
 
@@ -42,14 +47,38 @@
 
     <input id="title" type="text" placeholder="Título" />
     <textarea id="description" placeholder="Descripción"></textarea>
-    <input id="price" type="number" placeholder="Precio (opcional)" />
+    <input id="price" type="number" placeholder="Precio" />
+
+    <h3>Lugares cercanos</h3>
+    <label><input type="checkbox" id="near-mini"> Mini Market</label><br>
+    <label><input type="checkbox" id="near-super"> Supermarket</label><br>
+    <label><input type="checkbox" id="near-pharma"> Pharmacy</label><br>
+    <label><input type="checkbox" id="near-bus"> Bus Stop</label><br>
+    <label><input type="checkbox" id="near-uni"> University</label><br>
+    <label><input type="checkbox" id="near-hosp"> Hospital</label><br>
+
+    <h3>Nivel de seguridad</h3>
+    <select id="security-level">
+      <option value="Very Safe">Very Safe</option>
+      <option value="Safe">Safe</option>
+      <option value="Average">Average</option>
+      <option value="Low Safety">Low Safety</option>
+      <option value="Unsafe">Unsafe</option>
+    </select>
+
+    <h3>Plusvalía del sector</h3>
+    <select id="plusvalia">
+      <option value="High">High</option>
+      <option value="Medium">Medium</option>
+      <option value="Low">Low</option>
+    </select>
 
     <button id="publishBtn">Publicar</button>
   </div>
-  <!-- Tu archivo de publicación -->
-  <script type="module" src="./post.js"></script>
 
+  <script type="module" src="./post.js"></script>
 </body>
 </html>
+
 
 
