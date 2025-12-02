@@ -69,11 +69,18 @@ onSnapshot(
             container.innerHTML += `
                 <div class="card">
                     <img src="/safe-sphere-pwa/assets/roommates/default.jpg"
-                         class="card-img"
-                         alt="Roommate"
-                         style="object-fit:cover; height:250px;" />
+     class="card-img"
+     alt="Roommate"
+     style="
+        width:100%;
+        height:250px;
+        object-fit:contain;
+        background:#000;
+        padding:10px;
+        border-radius:10px;
+     " />
 
-                    <h3>${name}</h3>
+                   <h3>${name}</h3>
                     <p>${bio}</p>
 
                     <p><b>Budget:</b> $${budget}</p>
