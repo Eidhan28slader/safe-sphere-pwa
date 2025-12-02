@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Roommate</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/safe-sphere-pwa/styles.css">
 </head>
+
 <body>
 
 <nav>
-    <img src="assets/logo.png" class="logo">
-    <a href="index.html">Home</a>
-    <a href="listing.html">Listing</a>
-    <a href="post.html">Post</a>
-    <a href="admin.html">Admin</a>
-    <a href="roommates.html">Roommates</a>
-    <a href="feedback.html">Feedback</a>
+    <img src="/safe-sphere-pwa/assets/logo.png" class="logo" alt="SafeSphere logo">
+    <a href="/safe-sphere-pwa/index.html">Home</a>
+    <a href="/safe-sphere-pwa/listing.html">Listing</a>
+    <a href="/safe-sphere-pwa/post.html">Post</a>
+    <a href="/safe-sphere-pwa/admin.html">Admin</a>
+    <a href="/safe-sphere-pwa/roommates.html">Roommates</a>
+    <a href="/safe-sphere-pwa/feedback.html">Feedback</a>
 </nav>
 
 <main>
@@ -22,74 +23,67 @@
 <section class="section-box">
     <h2>Add New Roommate</h2>
     <p>Fill the information below:</p>
+</section>
 
-    <input id="rm-name" placeholder="Full Name">
-    <input id="rm-age" type="number" placeholder="Age">
-    <input id="rm-budget" type="number" placeholder="Monthly Budget">
-    <textarea id="rm-bio" placeholder="Short description"></textarea>
+<section class="section-box">
 
-    <label>Upload Photo</label>
-    <input id="rm-photo" type="file" accept="image/*">
+    <input id="name" placeholder="Full Name">
+    <input id="age" placeholder="Age">
+    <input id="budget" placeholder="Monthly Budget">
 
-    <button id="saveRoommate">Save</button>
+    <textarea id="bio" placeholder="Short description"></textarea>
+
+    <button id="saveBtn">Save</button>
+
 </section>
 
 </main>
 
 <script type="module">
-import {
-    db,
-    auth,
-    collection,
-    addDoc,
-    serverTimestamp,
-} from "./firebase.js";
+import { db, collection, addDoc, serverTimestamp } from "/safe-sphere-pwa/firebase.js";
 
-import {
-    getStorage,
-    ref,
-    uploadBytes,
-    getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+// Fotos aleatorias
+const randomPhotos = [
+    "/safe-sphere-pwa/assets/roommates/p1.jpg",
+    "/safe-sphere-pwa/assets/roommates/p2.jpg",
+    "/safe-sphere-pwa/assets/roommates/p3.jpg",
+    "/safe-sphere-pwa/assets/roommates/p4.jpg",
+];
 
-const saveBtn = document.getElementById("saveRoommate");
-const storage = getStorage();
+function randomPhoto() {
+    return randomPhotos[Math.floor(Math.random() * randomPhotos.length)];
+}
 
-saveBtn.addEventListener("click", async () => {
+document.getElementById("saveBtn").addEventListener("click", async () => {
 
-    const name = document.getElementById("rm-name").value;
-    const age = document.getElementById("rm-age").value;
-    const budget = document.getElementById("rm-budget").value;
-    const bio = document.getElementById("rm-bio").value;
-    const file = document.getElementById("rm-photo").files[0];
+    const name = document.getElementById("name").value.trim();
+    const age = document.getElementById("age").value.trim();
+    const budget = document.getElementById("budget").value.trim();
+    const bio = document.getElementById("bio").value.trim();
 
-    if (!name || !age || !budget || !bio) {
-        alert("Please complete all fields.");
+    if (!name || !age || !budget) {
+        alert("Please complete all required fields.");
         return;
     }
 
-    let photoURL = "assets/roommates/default.jpg";
+    try {
+        await addDoc(collection(db, "roommates"), {
+            name,
+            age,
+            budget,
+            bio,
+            createdAt: serverTimestamp(),
+            photo: randomPhoto() // <-- FOTO ALEATORIA
+        });
 
-    if (file) {
-        const filePath = `roommates/${Date.now()}_${file.name}`;
-        const fileRef = ref(storage, filePath);
+        alert("Roommate added successfully!");
+        window.location.href = "/safe-sphere-pwa/roommates.html";
 
-        await uploadBytes(fileRef, file);
-        photoURL = await getDownloadURL(fileRef);
+    } catch (err) {
+        console.error(err);
+        alert("Error saving roommate.");
     }
 
-    await addDoc(collection(db, "roommates"), {
-        name,
-        age,
-        budget,
-        bio,
-        photo: photoURL,
-        createdAt: serverTimestamp(),
-        userId: auth.currentUser ? auth.currentUser.uid : "anonymous"
-    });
-
-    alert("Roommate added!");
-    window.location.href = "roommates.html";
 });
 </script>
 
