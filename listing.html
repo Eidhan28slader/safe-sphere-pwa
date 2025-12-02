@@ -66,34 +66,42 @@
         const img = randomImage();
         box.innerHTML += `
   <div class="card">
-    <img src="${img}" class="card-img">
+  <img src="${img}" class="card-img">
 
-    <h3>${p.title}</h3>
-    <p>${p.desc}</p>
-    <p><b>Price: $${p.price}</b></p>
-    <div class="sphere-score-box">
-  <span class="sphere-label">SphereScore:</span>
-  <span class="sphere-value">${p.sphereScore}/100</span>
-</div>
-    <div class="safety-box">
-      <p><b>Security:</b> ${p.securityLevel ?? "Not specified"}</p>
-      <p><b>Plusvalía:</b> ${p.plusvalia ?? "Not specified"}</p>
-    </div>
+  <h3>${p.title}</h3>
+  <p>${p.desc}</p>
+  <p><b>Price: $${p.price}</b></p>
 
-    <div class="nearby-box">
-      <h4>Nearby Places</h4>
-      <div class="nearby-items">
-        ${p.nearby?.miniMarket ? "<span>🛒 Mini Market</span>" : ""}
-        ${p.nearby?.supermarket ? "<span>🏬 Supermarket</span>" : ""}
-        ${p.nearby?.pharmacy ? "<span>💊 Pharmacy</span>" : ""}
-        ${p.nearby?.busStop ? "<span>🚌 Bus Stop</span>" : ""}
-        ${p.nearby?.university ? "<span>🎓 University</span>" : ""}
-        ${p.nearby?.hospital ? "<span>🏥 Hospital</span>" : ""}
-      </div>
-    </div>
-
-    <span class="badge verified">Approved</span>
+  <!-- SPHERESCORE CON COLOR DINÁMICO -->
+  <div class="sphere-score-box" style="border-color:${p.sphereColor}">
+    <span class="sphere-label">SphereScore:</span>
+    <span class="sphere-value" style="color:${p.sphereColor}">
+      ${p.sphereScore}/100
+    </span>
   </div>
+
+  <!-- SEGURIDAD Y PLUSVALÍA -->
+  <div class="safety-box">
+    <p><b>Security:</b> ${p.securityLevel ?? "Not specified"}</p>
+    <p><b>Plusvalía:</b> ${p.plusvalia ?? "Not specified"}</p>
+  </div>
+
+  <!-- LUGARES CERCANOS -->
+  <div class="nearby-box">
+    <h4>Nearby Places</h4>
+    <div class="nearby-items">
+      ${p.nearby?.miniMarket ? "<span>🛒 Mini Market</span>" : ""}
+      ${p.nearby?.supermarket ? "<span>🏬 Supermarket</span>" : ""}
+      ${p.nearby?.pharmacy ? "<span>💊 Pharmacy</span>" : ""}
+      ${p.nearby?.busStop ? "<span>🚌 Bus Stop</span>" : ""}
+      ${p.nearby?.university ? "<span>🎓 University</span>" : ""}
+      ${p.nearby?.hospital ? "<span>🏥 Hospital</span>" : ""}
+    </div>
+  </div>
+
+  <span class="badge verified">Approved</span>
+</div>
+
         `;    
       });
     }
