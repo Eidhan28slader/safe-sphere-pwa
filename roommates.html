@@ -31,7 +31,6 @@
 
 </main>
 
-<!-- 🔥 TU SCRIPT CORRECTO -->
 <script type="module">
 
 import { db, collection, onSnapshot, query, orderBy } from "./firebase.js";
@@ -61,10 +60,8 @@ onSnapshot(
       container.innerHTML += `
         <div class="card">
           <img src="${img}" class="card-img" alt="Roommate">
-
           <h3>${r.name}</h3>
           <p>${r.bio}</p>
-
           <p><b>Budget:</b> $${r.budget}</p>
           <p><b>Age:</b> ${r.age}</p>
         </div>
@@ -77,3 +74,4 @@ onSnapshot(
 
 </body>
 </html>
+
