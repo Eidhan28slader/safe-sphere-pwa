@@ -195,5 +195,25 @@ textarea {
   font-weight: 700;
   color: #00b894; /* verde bonito */
 }
+.sphere-score-box {
+  margin-top: 10px;
+  background: #0d0d0d;
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid #3e6ef2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sphere-label {
+  font-weight: 600;
+  color: white;
+}
+
+.sphere-value {
+  font-size: 20px;
+  font-weight: 800;
+}
 
 
