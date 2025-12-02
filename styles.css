@@ -141,3 +141,36 @@ textarea {
   border-radius:16px;
   margin-bottom:18px;
 }
+
+.safety-box {
+  margin-top: 10px;
+  background: #0d0d0d;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #3e6ef2;
+}
+
+.nearby-box {
+  margin-top: 12px;
+  background: #0d0d0d;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.nearby-items span {
+  display: inline-block;
+  background: #111;
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin: 4px;
+  border: 1px solid #3e6ef2;
+  font-size: 14px;
+}
+
+.card-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
