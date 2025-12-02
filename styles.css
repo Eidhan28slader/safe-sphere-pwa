@@ -76,10 +76,11 @@ main {
 }
 
 .card img, .card-img {
-  width:100%;
-  height:260px;
-  object-fit:cover;
-  border-radius:12px;
+  width: 100%;
+  aspect-ratio: 16 / 9;     /* Mantiene proporción profesional */
+  object-fit: cover;        /* Cubre sin deformar */
+  border-radius: 12px;
+  display: block;
 }
 
 .badge {
