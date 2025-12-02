@@ -174,3 +174,26 @@ textarea {
   border-radius: 12px;
 }
 
+.sphere-score-box {
+  margin-top: 10px;
+  background: #0d0d0d;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #3e6ef2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sphere-label {
+  font-weight: 600;
+  color: #3e6ef2;
+}
+
+.sphere-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #00b894; /* verde bonito */
+}
+
+
