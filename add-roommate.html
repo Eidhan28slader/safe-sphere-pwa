@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Roommate - SafeSphere</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+  <img src="assets/logo.png" class="logo">
+  <a href="index.html">Home</a>
+  <a href="listing.html">Listing</a>
+  <a href="post.html">Post</a>
+  <a href="admin.html">Admin</a>
+  <a href="roommates.html">Roommates</a>
+</nav>
+
+<section class="section-box">
+  <h2>Add Roommate</h2>
+  <p>Publish your roommate profile.</p>
+</section>
+
+<div class="card" style="max-width:500px; margin:auto;">
+
+  <input id="rm-name" type="text" placeholder="Name">
+  <input id="rm-age" type="number" placeholder="Age">
+  <input id="rm-budget" type="number" placeholder="Budget">
+  <textarea id="rm-bio" placeholder="Short bio"></textarea>
+
+  <button id="rm-submit">Publish Roommate</button>
+
+</div>
+
+<script type="module">
+import {
+  db,
+  collection,
+  addDoc,
+  serverTimestamp
+} from "./firebase.js";
+
+const btn = document.getElementById("rm-submit");
+
+btn.onclick = async () => {
+
+  const name = document.getElementById("rm-name").value.trim();
+  const age = Number(document.getElementById("rm-age").value);
+  const budget = Number(document.getElementById("rm-budget").value);
+  const bio = document.getElementById("rm-bio").value.trim();
+
+  if (!name || !age || !budget || !bio) {
+    alert("Fill all fields.");
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "roommates"), {
+      name,
+      age,
+      budget,
+      bio,
+      createdAt: serverTimestamp()
+    });
+
+    alert("Roommate added!");
+    window.location.href = "roommates.html";
+
+  } catch (err) {
+    console.error(err);
+    alert("Error creating roommate.");
+  }
+};
+</script>
+
+</body>
+</html>
